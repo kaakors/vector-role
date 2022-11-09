@@ -4,8 +4,20 @@
   ansible.builtin.get_url:
     url: "https://packages.timber.io/vector/0.12.2/vector-0.12.2-1.x86_64.rpm"
     dest: "./vector-0.12.2.rpm"
+  when: ansible_pkg_mgr == 'yum'
+- name: Download vector
+  ansible.builtin.get_url:
+    url: "https://packages.timber.io/vector/0.12.2/vector-0.12.2-amd64.deb"
+    dest: "./vector-0.12.2.deb"
+  when: ansible_pkg_mgr == 'apt'
 - name: Install vector
   ansible.builtin.yum:
     name:
       - vector-0.12.2.rpm
     state: present
+  when: ansible_pkg_mgr == 'yum'
+
+- name: Install vector
+  ansible.builtin.apt:
+    deb: vector-0.12.2.deb
+  when: ansible_os_family == 'Debian'
