@@ -1,0 +1,29 @@
+node("linux"){
+    def isProd = env.prod
+    stage("Git checkout"){
+        git branch: 'master', credentialsId: '283bea74-7c42-4f08-831f-b6c78fc6df6d', url: 'git@github.com:aragastmatb/example-playbook.git'
+    }
+    stage("Sample define secret_check"){
+        secret_check=true
+    }
+    stage("Run playbook"){
+        if (isProd == 'true'){
+            if (secret_check){
+                sh 'ansible-playbook site.yml -i inventory/prod.yml --check --diff'
+            }
+            else{
+                echo 'need more action'
+            }
+        }
+        else{
+            if (secret_check){
+                sh 'ansible-playbook site.yml -i inventory/prod.yml'
+            }
+            else{
+                echo 'need more action'
+            }
+        }
+        
+        
+    }
+}
